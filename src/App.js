@@ -8,10 +8,13 @@ import "./index.css";
 import { MdFileUpload } from "react-icons/md";
 import { BsCloudUpload, BsThreeDots } from "react-icons/bs";
 import axios from "axios";
+import ShowImages from "./components/ShowImages";
 
 function App() {
-  const [data, setData] = useState([]); // data to store objects of cats I think I'll need
+  const [data, setData] = useState([]); // data to store objects of cats I'll need
   const [isModalVisible, setIsModalVisible] = useState(false); // state for if Modal is visible or not
+  const [loading, setLoading] = useState(true);
+  // When app loads, will show "Loading" because of this and terniary operator at the bottom
 
   // I think I need state to store objects that will have the cat information, like the imagine, button, likes, etc
 
@@ -36,23 +39,57 @@ function App() {
   // use strings
   // file: "correct-file-to-put-in-here"
 
-  const { Dragger } = Upload;
+  useEffect(() => {
+    // use in axios call with parameters,  https://api.thecatapi.com/v1/images/
+    axios
+      .get("https://api.thecatapi.com/v1/images/", {
+        headers: {
+          "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+        },
+      }) //used to get info from API endpoint, in our case get cat info from endpoint
+      .then((response) => {
+        //info in response object
+        setData(response); // puts our response in state data
+        setLoading(false); // sets loading to false, due to terniary operator in return, displays everything else
+        // console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const { Dragger } = Upload; // this component and const props below is used to upload file
 
   const props = {
     name: "file",
-    multiple: false,
-    action: "https://api.thecatapi.com/v1/images/upload",
+    multiple: true,
+    action: "https://api.thecatapi.com/v1/images/upload", // sends this image to the API endpoint
     headers: {
       "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
     },
+    // onChange(info) {
+    //   console.log(info, "THIS IS WHAT I WANT TO SEE");
+    //   const { status } = info.file;
+    //   if (status !== "uploading") {
+    //     // console.log(info);
+    //     console.log(info.file, info.fileList, "THIS IS INFO.FILE");
+    //   }
+    //   if (status === "done") {
+    //     // console.log(info);
+    //     message.success(`${info.file.name} file uploaded successfully.`);
+    //   } else if (status === "error") {
+    //     // console.log(info);
+    //     message.error(`${info.file.name} file upload failed.`);
+    //   }
+    // },
     onChange(info) {
       console.log(info, "THIS IS WHAT I WANT TO SEE");
       const { status } = info.file;
       if (status !== "uploading") {
         // console.log(info);
-        console.log(info.file, info.fileList);
+        console.log(info.file, info.fileList, "THIS IS INFO.FILE");
       }
       if (status === "done") {
         // console.log(info);
@@ -81,53 +118,57 @@ function App() {
 
   return (
     <div className="App">
-      <div className="button-movement">
-        <Button
-          type="primary"
-          className="main-button-style"
-          onClick={showModal} //button that opens modal
-        >
-          {/* MdFileUpload is icon within button */}
-          <MdFileUpload className="icon-styling" size="20px" />
-          Add New
-        </Button>
-      </div>
-
-      <Modal
-        visible={isModalVisible} //state to see if modal is visible or not
-        title="Upload File" //title at top of modal
-        onOk={handleOk} //calls handleOk func
-        onCancel={handleCancel} //calls handleCancel func
-        footer={[
-          //buttons within footer
-          // THE GOOGLE BUTTON MIGHT GIVE ME A CLUE!
-          // <Button
-          //   key="link"
-          //   href="https://google.com"
-          //   type="primary"
-          //   onClick={handleOk}
-          // >
-          //   Search on Google
-          // </Button>,
-
-          //flexbox on buttons
-          <div className="button-styling">
-            <Button key="back" onClick={handleCancel}>
-              Cancel
+      {loading ? ( // shows Loading when true, shows everything else when false. Allows data to load effectively and "Loading" shows user app is working.
+        <h1>Loading...</h1>
+      ) : (
+        <div>
+          <div className="button-movement">
+            <Button
+              type="primary"
+              className="main-button-style"
+              onClick={showModal} //button that opens modal
+            >
+              {/* MdFileUpload is icon within button */}
+              <MdFileUpload className="icon-styling" size="20px" />
+              Add New
             </Button>
-            {/* above button calls handleCancel func */}
-            {/* <Button key="submit" type="primary" onClick={handleOk}>
+          </div>
+          <ShowImages actualData={data} />
+          <Modal
+            visible={isModalVisible} //state to see if modal is visible or not
+            title="Upload File" //title at top of modal
+            onOk={handleOk} //calls handleOk func
+            onCancel={handleCancel} //calls handleCancel func
+            footer={[
+              //buttons within footer
+              // THE GOOGLE BUTTON MIGHT GIVE ME A CLUE!
+              // <Button
+              //   key="link"
+              //   href="https://google.com"
+              //   type="primary"
+              //   onClick={handleOk}
+              // >
+              //   Search on Google
+              // </Button>,
+
+              //flexbox on buttons
+              <div className="button-styling">
+                <Button key="back" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                {/* above button calls handleCancel func */}
+                {/* <Button key="submit" type="primary" onClick={handleOk}>
               Submit
             </Button> */}
-            {/* above button calls handleOk func */}
-            {/* <Upload {...props}>
+                {/* above button calls handleOk func */}
+                {/* <Upload {...props}>
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload> */}
-            {/* above allows me to upload file from cpu to my app */}
-          </div>,
-        ]}
-      >
-        {/* <div className="modal-sizing">
+                {/* above allows me to upload file from cpu to my app */}
+              </div>,
+            ]}
+          >
+            {/* <div className="modal-sizing">
           <div>
             <BsCloudUpload size="80px" color="#4da6ff" />
           </div>
@@ -141,20 +182,22 @@ function App() {
             <BsThreeDots size="40px" className="dashing-icon" />
           </div>
         </div> */}
-        <Dragger {...props}>
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Support for a single or bulk upload. Strictly prohibit from
-            uploading company data or other band files
-          </p>
-        </Dragger>
-        ,
-      </Modal>
+            <Dragger {...props}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from
+                uploading company data or other band files
+              </p>
+            </Dragger>
+            ,
+          </Modal>
+        </div>
+      )}
     </div>
   );
 }

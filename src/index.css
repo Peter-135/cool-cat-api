@@ -62,3 +62,13 @@ code {
 .modal-styling {
   background-color: green;
 }
+
+/* .super {
+  background-color: red;
+} */
+
+.smaller-sizing {
+  height: 200px;
+  width: 200px;
+  margin-right: 20px;
+}
