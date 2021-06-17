@@ -15,11 +15,8 @@ function App() {
   const [isModalVisible, setIsModalVisible] = useState(false); // state for if Modal is visible or not
   const [loading, setLoading] = useState(true);
   // When app loads, will show "Loading" because of this and terniary operator at the bottom
-  const [extraData, setExtraData] = useState([]);
 
   // I think I need state to store objects that will have the cat information, like the imagine, button, likes, etc
-
-  // Somewhere I think I'll need another state where I'll actually add objects that show the cats.
 
   // Display that info in the return I think, using map method??
 
@@ -45,7 +42,7 @@ function App() {
 
     // "https://api.thecatapi.com/v1/images/?limit=10";
     axios
-      .get("https://api.thecatapi.com/v1/images/?limit=10", {
+      .get("https://api.thecatapi.com/v1/images/?limit=12", {
         headers: {
           "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
         },
@@ -65,7 +62,7 @@ function App() {
   const { Dragger } = Upload; // this component and const props below is used to upload file
   const props = {
     name: "file", // the name of uploading file
-    multiple: true,
+    multiple: false,
     action: "https://api.thecatapi.com/v1/images/upload", // sends this image to the API endpoint
     headers: {
       "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
@@ -74,7 +71,7 @@ function App() {
     },
     onChange(info) {
       console.log(info, "THIS IS WHAT I WANT TO SEE");
-      // was const { status } = info.file
+
       const { status } = info.file;
       if (status !== "uploading") {
         console.log(info);
