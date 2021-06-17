@@ -15,6 +15,7 @@ function App() {
   const [isModalVisible, setIsModalVisible] = useState(false); // state for if Modal is visible or not
   const [loading, setLoading] = useState(true);
   // When app loads, will show "Loading" because of this and terniary operator at the bottom
+  const [extraData, setExtraData] = useState([]);
 
   // I think I need state to store objects that will have the cat information, like the imagine, button, likes, etc
 
@@ -41,8 +42,10 @@ function App() {
 
   useEffect(() => {
     // use in axios call with parameters,  https://api.thecatapi.com/v1/images/
+
+    // "https://api.thecatapi.com/v1/images/?limit=10";
     axios
-      .get("https://api.thecatapi.com/v1/images/", {
+      .get("https://api.thecatapi.com/v1/images/?limit=10", {
         headers: {
           "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
         },
@@ -52,6 +55,7 @@ function App() {
         setData(response); // puts our response in state data
         setLoading(false); // sets loading to false, due to terniary operator in return, displays everything else
         // console.log(response);
+        console.log(response);
       })
       .catch((error) => {
         console.log(error);
@@ -59,9 +63,8 @@ function App() {
   }, []);
 
   const { Dragger } = Upload; // this component and const props below is used to upload file
-
   const props = {
-    name: "file",
+    name: "file", // the name of uploading file
     multiple: true,
     action: "https://api.thecatapi.com/v1/images/upload", // sends this image to the API endpoint
     headers: {
@@ -69,26 +72,12 @@ function App() {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
     },
-    // onChange(info) {
-    //   console.log(info, "THIS IS WHAT I WANT TO SEE");
-    //   const { status } = info.file;
-    //   if (status !== "uploading") {
-    //     // console.log(info);
-    //     console.log(info.file, info.fileList, "THIS IS INFO.FILE");
-    //   }
-    //   if (status === "done") {
-    //     // console.log(info);
-    //     message.success(`${info.file.name} file uploaded successfully.`);
-    //   } else if (status === "error") {
-    //     // console.log(info);
-    //     message.error(`${info.file.name} file upload failed.`);
-    //   }
-    // },
     onChange(info) {
       console.log(info, "THIS IS WHAT I WANT TO SEE");
+      // was const { status } = info.file
       const { status } = info.file;
       if (status !== "uploading") {
-        // console.log(info);
+        console.log(info);
         console.log(info.file, info.fileList, "THIS IS INFO.FILE");
       }
       if (status === "done") {
@@ -99,6 +88,7 @@ function App() {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
+
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
     },

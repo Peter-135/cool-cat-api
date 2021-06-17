@@ -18,11 +18,7 @@ const ShowImages = ({ actualData }) => {
       <p>Here I come!</p>
       <div className="super">
         <h1>Hi guys</h1>
-        {/* <p>{actualData.data.height}</p> */}
-        {/* <img src="https://cdn2.thecatapi.com/images/58r4fYPa6.jpg " /> */}
 
-        {/* INSERT JAVASCRIPT EXPRESSION INTO IMG SRC */}
-        {/* <img src={"${imageURLIWant}"} /> */}
         <div className="background">
           <img className="smaller-sizing" src={imageURLIWant} />
           {/* puts images url from data into file, so using img src I can display the image */}
