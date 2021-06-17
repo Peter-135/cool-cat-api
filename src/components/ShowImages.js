@@ -24,33 +24,24 @@ const ShowImages = ({ actualData }) => {
   // actualData.data. original_filename
   return (
     <div>
-      <h1>Hello World</h1>
-      <p>Here I come!</p>
-      <div className="super">
-        <h1>Hi guys</h1>
-        {/* <h1>{arrayData[0].original_filename}</h1>
-        <img className="smaller-sizing" src={imageURLIWant} /> */}
-
-        {/* <div className="background"> */}
-        {/* <img className="smaller-sizing" src={imageURLIWant} /> */}
-        {/* puts images url from data into file, so using img src I can display the image */}
-        {/* <img className="smaller-sizing" src={imageURLIWant} />
-
-          <img className="smaller-sizing" src={imageURLIWant} /> */}
-        {/* </div> */}
-        {/* 
-        <div className="background">
-          {arrayData.map((element, index) => {
-            return <h1>{element.original_filename}</h1>;
-          })}
-          </div>
-          {/* VERY GOOD STUFF! */}
-
-        <div className="background">
-          {arrayData.map((element, index) => {
-            return <img className="smaller-sizing" src={element.url} />;
-          })}
-        </div>
+      <div className="background-styling">
+        {arrayData.map((element, index) => {
+          return (
+            <div className="div-styling">
+              <div>
+                <img className="smaller-sizing" src={element.url} />
+              </div>
+              <div className="favourite-spacing">
+                <span>135</span>
+                <button className="favourite">Favourite</button>
+              </div>
+              <div className="two-buttons">
+                <button className="upvote">Upvote</button>
+                <button className="downvote">Downvote</button>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
