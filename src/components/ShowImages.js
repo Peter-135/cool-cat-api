@@ -1,4 +1,6 @@
 import React from "react";
+import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
+import { FaCity, FaThumbsUp } from "react-icons/fa";
 
 const ShowImages = ({ actualData }) => {
   const dataIWant = actualData.data[0];
@@ -32,12 +34,25 @@ const ShowImages = ({ actualData }) => {
                 <img className="smaller-sizing" src={element.url} />
               </div>
               <div className="favourite-spacing">
-                <span>135</span>
-                <button className="favourite">Favourite</button>
+                <span>
+                  <FaCity />
+                  135
+                </span>
+                <button className="favourite">
+                  {" "}
+                  <FaThumbsUp /> Favourite
+                </button>
               </div>
               <div className="two-buttons">
-                <button className="upvote">Upvote</button>
-                <button className="downvote">Downvote</button>
+                <button className="upvote">
+                  <FiThumbsUp className="bit-of-space" />
+                  Upvote
+                </button>
+                <button className="downvote">
+                  {" "}
+                  <FiThumbsDown className="bit-of-space" />
+                  Downvote
+                </button>
               </div>
             </div>
           );

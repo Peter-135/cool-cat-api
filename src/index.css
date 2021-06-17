@@ -116,6 +116,7 @@ img {
   background-color: #8eed85;
   border: none;
   border-radius: 7px;
+  padding-right: 5px;
 }
 
 .favourite {
@@ -128,4 +129,8 @@ img {
   display: flex;
   justify-content: space-around;
   margin: 10px 0px;
+}
+
+.bit-of-space {
+  margin-right: 5px;
 }
