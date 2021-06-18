@@ -90,7 +90,7 @@ code {
   /* background-color: red; */
   display: inline-block;
   margin-right: 20px;
-  padding: 30px 24px 24px 30px;
+  padding: 30px 15px 24px 33px;
 
   /* background: #ffffff; */
   box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.3);
@@ -133,4 +133,15 @@ img {
 
 .bit-of-space {
   margin-right: 5px;
+}
+
+.bit-of-space-two {
+  margin-right: 2px;
+}
+
+.round-heart {
+  /* background-color: green; */
+  padding: 7px 4px 0px 4px;
+  border-radius: 50%;
+  box-shadow: 6px 6px 9px 0px rgba(0, 0, 0, 0.3);
 }
