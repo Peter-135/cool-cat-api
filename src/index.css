@@ -112,11 +112,21 @@ img {
   border-radius: 7px;
 }
 
+.downvote:hover {
+  background-color: #f59893;
+  color: #82807f;
+}
+
 .upvote {
   background-color: #8eed85;
   border: none;
   border-radius: 7px;
   padding-right: 5px;
+}
+
+.upvote:hover {
+  background-color: #b9fc60;
+  color: #8b8c89;
 }
 
 .favourite {

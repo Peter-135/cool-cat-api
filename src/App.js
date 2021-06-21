@@ -16,9 +16,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   // When app loads, will show "Loading" because of this and terniary operator at the bottom
 
-  // I think I need state to store objects that will have the cat information, like the imagine, button, likes, etc
-
-  // Display that info in the return I think, using map method??
+  // I think I need state to store objects that will have the cat information, like the image, button, likes, etc
 
   // right api call, uses, learn how to use axios, how to send the data, post
 
@@ -155,20 +153,6 @@ function App() {
               </div>,
             ]}
           >
-            {/* <div className="modal-sizing">
-          <div>
-            <BsCloudUpload size="80px" color="#4da6ff" />
-          </div>
-          <div>
-            {" "}
-            <p className="p-styling">
-              Click or drag file to this area to upload
-            </p>
-          </div>
-          <div className="dashing-icon">
-            <BsThreeDots size="40px" className="dashing-icon" />
-          </div>
-        </div> */}
             <Dragger {...props}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
