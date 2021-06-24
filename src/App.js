@@ -16,25 +16,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   // When app loads, will show "Loading" because of this and terniary operator at the bottom
 
-  // I think I need state to store objects that will have the cat information, like the image, button, likes, etc
-
-  // right api call, uses, learn how to use axios, how to send the data, post
-
-  // posting to the endpoint
-
-  //https://api.thecatapi.com/v1/images/upload
-
-  //link for axios api call
-  //api key: 17d94b92-754f-46eb-99a0-65be65b5d18f
-
-  // {
-  //   header: "17d94b92-754f-46eb-99a0-65be65b5d18f",
-  // }// maybe use info within axios??
-
-  // find out what to pass to the file property
-  // use strings
-  // file: "correct-file-to-put-in-here"
-
   useEffect(() => {
     // use in axios call with parameters,  https://api.thecatapi.com/v1/images/
 
@@ -56,6 +37,8 @@ function App() {
         console.log(error);
       });
   }, []);
+
+  //  if pass state or props variable in the array, it will run every time state or props is updated
 
   const { Dragger } = Upload; // this component and const props below is used to upload file
   const props = {

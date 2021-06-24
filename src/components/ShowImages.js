@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { FaCity, FaThumbsUp } from "react-icons/fa";
 
@@ -9,14 +9,14 @@ import axios from "axios";
 const ShowImages = ({ actualData }) => {
   const [filled, setFilled] = useState(false); // state to see if I can change the color from black to red and vice-versa
   const [editedIndex, setEditedIndex] = useState(null);
-  // i think the  actual index to be true or null, so it makes only that row editable, not whole object
-  const [favouritedData, setFavouritedData] = useState([]);
+  // The actual index to be true or null, so it makes only that row editable, not whole object
+  // const [favouritedData, setFavouritedData] = useState([]);
+  //the favourite data to be put into state
 
   const dataIWant = actualData.data[0];
   const heightOfCat = dataIWant.height;
   const ogFileName = dataIWant.original_filename;
   const imageURLIWant = dataIWant.url;
-
   // console.log(favouritedId, "I AM FAVOURITED ID!");
 
   //   console.log(actualData, "I AM THE REAL DATA");
@@ -26,7 +26,7 @@ const ShowImages = ({ actualData }) => {
   const arrayData = actualData.data;
   const imageUrl = actualData.data[0];
   //   console.log(imageUrl, "I AM URL");
-
+  console.log(actualData.data[5].id, "THIS IS IT");
   //   const justNames = actualData.data;
   // console.log(arrayData, "I AM TRUE");
 
@@ -34,56 +34,17 @@ const ShowImages = ({ actualData }) => {
   //   console.log(arrayData[0].url, "I AM IMAGE URL");
   // actualData.data. original_filename
 
-  const helloWorld = (index) => {
-    // console.log("Hello World");
-    setFilled(true); // changes filled state to true and in turn allows terniary operator to turn the heart color red
-    setEditedIndex(index);
-
-    // should call first api (clicking favourite calls this api end and changes text on the button to heart to filled)
-  };
-
-  const goodByeWorld = (index) => {
-    //     console.log("Goodbye World");
-
-    setFilled(false);
-    // changes filled state to false and in turn allows terniary operator to turn the heart color black
-    setEditedIndex(null);
-
-    //     // should call second api (click favourite calls this api) and changes button to unfilled
-  };
-
-  //     const favouriteHeart = (index) => {
-  //       useEffect(() => {
-  //         axios.post("https://api.thecatapi.com/v1/favourites",
-  //   {
-  //     headers: {
-  //         "Content-Type": "application/json",
-  //       "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
-  //     },
-  //     {
-  //         "image_id": {arrayData.id}
-  //     }, // template literal
-  // }).then((response) => {
-  // console.log(response);
-  //     setFilled(true); //should be within useEffect
-  //     setEditedIndex(index); // should be within useEffect
-  // }).catch((error) => {
-  //     console.log(error);
-  //   })},
-
-  // []);
-
   // pass in index
-  // useEffect(() => {
+
+  //  if pass state or props variable in the array, it will run every time state or props is updated
+
   const favouriteHeart = (index) => {
-    // const favouritedId = favouritedData.data;
-    // useEffect(() => {
     axios
       .post(
         "https://api.thecatapi.com/v1/favourites",
         {
           // image_id: "Bh7ZzShGR",
-          image_id: `${arrayData.id}`,
+          image_id: `${actualData.data[index].id}`,
         },
         {
           headers: {
@@ -93,24 +54,46 @@ const ShowImages = ({ actualData }) => {
         }
       )
       .then(function (response) {
+        // if filled true, let filled for that index remain true??
+
+        // if (filled === false) {
+        // if (filled === true) {
+        //   return;
+        // } else {
         console.log(response, "I AM FAVOURITED");
-        setFilled(true);
-        setEditedIndex(index);
-        setFavouritedData(response); // putting favourited info into state, so I can do the delete part
+        setFilled(true); // from false to true, so terniary operator turns it from black to red
+        setEditedIndex(index); // from null to index, so terniary operator turns it from black to red only for that specific object
+        // setFavouritedData(response);
+        // putting favourited info into state, so I can do the delete part
+        // }
+        // } else {
+        // setFavouritedData([...favouritedData, response]);
+        //   return setFilled(true);
+        // }
       })
       .catch(function (error) {
         console.log(error);
       });
-    // }, []);
   };
 
   // console.log(favouritedData, "SUPER FAVOURITED");
   // console.log(favouritedData.data.id, "SUPER FAVOURITED");
 
+  const helloWorld = (index) => {
+    setFilled(true); // from false to true, so terniary operator turns it from black to red
+    setEditedIndex(index); // from null to index, so terniary operator turns it from black to red only for that specific object
+  };
+
+  const goodByeWorld = (index) => {
+    setFilled(false); // not longer true, so terniary operator below changes it back from red to black
+
+    setEditedIndex(null); // not longer true, so terniary operator below changes it back from red to black for only that index
+  };
+
   const deleteHeart = (index) => {
     axios
       .delete(
-        `https://api.thecatapi.com/v1/favourites/${favouritedData.data.id}`, // passing id of favourited data to delete
+        // `https://api.thecatapi.com/v1/favourites/${favouritedData.data.id}`, // passing id of favourited data to delete
 
         {
           headers: {
@@ -120,9 +103,9 @@ const ShowImages = ({ actualData }) => {
       )
       .then(function (response) {
         console.log(response, "I AM DELETE RESPONSE");
-        setFilled(false);
+        setFilled(false); // not longer true, so terniary operator below changes it back from red to black
 
-        setEditedIndex(null);
+        setEditedIndex(null); // not longer true, so terniary operator below changes it back from red to black for only that index
       })
       .catch(function (error) {
         console.log(error);
@@ -131,8 +114,6 @@ const ShowImages = ({ actualData }) => {
   // Make a copy of that data, then add it on to favouritedData?
 
   const upVoting = (index) => {
-    // const favouritedId = favouritedData.data;
-    // useEffect(() => {
     axios
       .post(
         "https://api.thecatapi.com/v1/votes",
@@ -157,13 +138,10 @@ const ShowImages = ({ actualData }) => {
   };
 
   const downVoting = (index) => {
-    // const favouritedId = favouritedData.data;
-    // useEffect(() => {
     axios
       .post(
         "https://api.thecatapi.com/v1/votes",
         {
-          // image_id: "Bh7ZzShGR",
           image_id: `${arrayData.id}`,
           value: 0,
         },
@@ -194,7 +172,12 @@ const ShowImages = ({ actualData }) => {
               <div className="favourite-spacing">
                 <span>
                   <FaCity className="bit-of-space-two" />
-                  135
+                  315
+                  {/* {`${Math.floor(Math.random() * 500) + 1}`} */}
+                  {/* Math.random() returns a random decimal no. between 0 and 1 (strictly less than 1) */}
+                  {/* Math.floor() returns the largest integer less than or equal to a given number.  */}
+                  {/* Add 1 so minimum no. is 1 instead of 0 and max no. is 1 more too */}
+                  {/* Times by no. you want range between, e.g. for no. between 1 and 10, *10 */}
                 </span>
                 <div className="round-heart">
                   <label
@@ -203,16 +186,17 @@ const ShowImages = ({ actualData }) => {
                     //     ? goodByeWorld(index)
                     //     : helloWorld(index)
                     // }
-                    // onClick={() =>
-                    //   filled && index == editedIndex
-                    //     ? goodByeWorld(index)
-                    //     : favouriteHeart(index)
-                    // }
                     onClick={() =>
                       filled && index == editedIndex
-                        ? deleteHeart(index)
+                        ? goodByeWorld(index)
                         : favouriteHeart(index)
                     }
+
+                    // onClick={() =>
+                    //   filled && index == editedIndex
+                    //     ? deleteHeart(index)
+                    //     : favouriteHeart(index)
+                    // }
                   >
                     <AiFillHeart
                       size="20px"
@@ -245,3 +229,26 @@ const ShowImages = ({ actualData }) => {
 };
 
 export default ShowImages;
+
+// Something I was trying
+
+//     const favouriteHeart = (index) => {
+//       useEffect(() => {
+//         axios.post("https://api.thecatapi.com/v1/favourites",
+//   {
+//     headers: {
+//         "Content-Type": "application/json",
+//       "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+//     },
+//     {
+//         "image_id": {arrayData.id}
+//     }, // template literal
+// }).then((response) => {
+// console.log(response);
+//     setFilled(true); //should be within useEffect
+//     setEditedIndex(index); // should be within useEffect
+// }).catch((error) => {
+//     console.log(error);
+//   })},
+
+// []);
