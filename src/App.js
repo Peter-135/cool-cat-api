@@ -13,23 +13,31 @@ import ShowImages from "./components/ShowImages";
 function App() {
   const [data, setData] = useState([]); // data to store objects of cats I'll need
   const [isModalVisible, setIsModalVisible] = useState(false); // state for if Modal is visible or not
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   // When app loads, will show "Loading" because of this and terniary operator at the bottom
+  const [favouriteLoading, setFavouriteLoading] = useState(false);
+  // When app loads, will show "Loading" because of this and terniary operator at the bottom
+
+  const [favouritedData, setFavouritedData] = useState([]);
+  //the favourite data to be put into state
 
   useEffect(() => {
     // use in axios call with parameters,  https://api.thecatapi.com/v1/images/
+
+    // Newest API key: 28d6171b-d8fc-424d-9962-2fe3ab6de934
 
     // "https://api.thecatapi.com/v1/images/?limit=10";
     axios
       .get("https://api.thecatapi.com/v1/images/?limit=12", {
         headers: {
-          "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+          "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+          // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
         },
       }) //used to get info from API endpoint, in our case get cat info from endpoint
       .then((response) => {
         //info in response object
         setData(response); // puts our response in state data
-        setLoading(false); // sets loading to false, due to terniary operator in return, displays everything else
+        setLoading(true); // sets loading to false, due to terniary operator in return, displays everything else
         // console.log(response);
         console.log(response);
       })
@@ -38,6 +46,35 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    // use in axios call with parameters,  https://api.thecatapi.com/v1/images/
+
+    // Newest API key: 28d6171b-d8fc-424d-9962-2fe3ab6de934
+
+    // "https://api.thecatapi.com/v1/images/?limit=10";
+    axios
+      .get("https://api.thecatapi.com/v1/favourites?limit=100", {
+        headers: {
+          "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+          // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+        },
+      }) //used to get info from API endpoint, in our case get cat info from endpoint
+      .then((response) => {
+        //info in response object
+        setFavouritedData(response); // puts our response in state data
+        setFavouriteLoading(true); // sets loading to false, due to terniary operator in return, displays everything else
+        // setLoading(false);
+        // sets loading to false, due to terniary operator in return, displays everything else
+        // console.log(response);
+        console.log(response, "MY FAVOURITE DATA");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // console.log(data, "MY SUPER FAVORS");
+  console.log(favouritedData, "MY SUPER FAVORS YO!");
   //  if pass state or props variable in the array, it will run every time state or props is updated
 
   const { Dragger } = Upload; // this component and const props below is used to upload file
@@ -46,7 +83,8 @@ function App() {
     multiple: false,
     action: "https://api.thecatapi.com/v1/images/upload", // sends this image to the API endpoint
     headers: {
-      "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+      "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+      // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
     },
@@ -86,9 +124,7 @@ function App() {
 
   return (
     <div className="App">
-      {loading ? ( // shows Loading when true, shows everything else when false. Allows data to load effectively and "Loading" shows user app is working.
-        <h1>Loading...</h1>
-      ) : (
+      {loading && favouriteLoading ? (
         <div>
           <div className="button-movement">
             <Button
@@ -101,7 +137,7 @@ function App() {
               Add New
             </Button>
           </div>
-          <ShowImages actualData={data} />
+          <ShowImages actualData={data} myFavouriteData={favouritedData} />
           <Modal
             visible={isModalVisible} //state to see if modal is visible or not
             title="Upload File" //title at top of modal
@@ -151,6 +187,9 @@ function App() {
             ,
           </Modal>
         </div>
+      ) : (
+        // shows Loading when true, shows everything else when false. Allows data to load effectively and "Loading" shows user app is working.
+        <h1>Loading...</h1>
       )}
     </div>
   );

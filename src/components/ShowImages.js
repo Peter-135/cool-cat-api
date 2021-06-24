@@ -6,31 +6,35 @@ import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom/cjs/react-dom.development";
 import axios from "axios";
 
-const ShowImages = ({ actualData }) => {
+const ShowImages = ({ actualData, myFavouriteData }) => {
   const [filled, setFilled] = useState(false); // state to see if I can change the color from black to red and vice-versa
   const [editedIndex, setEditedIndex] = useState(null);
   // The actual index to be true or null, so it makes only that row editable, not whole object
-  // const [favouritedData, setFavouritedData] = useState([]);
-  //the favourite data to be put into state
 
   const dataIWant = actualData.data[0];
   const heightOfCat = dataIWant.height;
   const ogFileName = dataIWant.original_filename;
   const imageURLIWant = dataIWant.url;
   // console.log(favouritedId, "I AM FAVOURITED ID!");
+  console.log(actualData, "MY DISPLAYED DATA!");
+  console.log(myFavouriteData, "MY FAVOURITES ARRAY!");
+  // console.log(favouritedData, "MY FAVS!!!!! AREN'T YOU??");
 
+  // console.log(dataIWant, "LET'S A GO");
   //   console.log(actualData, "I AM THE REAL DATA");
 
   //   console.log(imageURLIWant, "SHOULD BE IMAGE-URL");
 
+  // console.log(myFavouriteData.data[5].id, "MY FAVOURITES ID!");
+
   const arrayData = actualData.data;
   const imageUrl = actualData.data[0];
   //   console.log(imageUrl, "I AM URL");
-  console.log(actualData.data[5].id, "THIS IS IT");
+
   //   const justNames = actualData.data;
   // console.log(arrayData, "I AM TRUE");
 
-  //   console.log(arrayData[0].original_filename, "I AM NAME");
+  // console.log(arrayData[7].id, "I AM NAME");
   //   console.log(arrayData[0].url, "I AM IMAGE URL");
   // actualData.data. original_filename
 
@@ -45,11 +49,13 @@ const ShowImages = ({ actualData }) => {
         {
           // image_id: "Bh7ZzShGR",
           image_id: `${actualData.data[index].id}`,
+          // image_id: `${actualData.data.id}`,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+            "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+            // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
           }, // headers necessary to favourite info
         }
       )
@@ -93,11 +99,12 @@ const ShowImages = ({ actualData }) => {
   const deleteHeart = (index) => {
     axios
       .delete(
-        // `https://api.thecatapi.com/v1/favourites/${favouritedData.data.id}`, // passing id of favourited data to delete
+        `https://api.thecatapi.com/v1/favourites/${myFavouriteData.data[index].id}`, // passing id of favourited data to delete
 
         {
           headers: {
-            "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+            "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+            // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
           },
         }
       )
@@ -119,13 +126,14 @@ const ShowImages = ({ actualData }) => {
         "https://api.thecatapi.com/v1/votes",
         {
           // image_id: "Bh7ZzShGR",
-          image_id: `${arrayData.id}`,
+          image_id: `${actualData.data[index].id}`,
           value: 1,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+            "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+            // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
           }, // headers necessary to favourite info
         }
       )
@@ -142,13 +150,14 @@ const ShowImages = ({ actualData }) => {
       .post(
         "https://api.thecatapi.com/v1/votes",
         {
-          image_id: `${arrayData.id}`,
+          image_id: `${actualData.data[index].id}`,
           value: 0,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+            "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+            // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
           }, // headers necessary to favourite info
         }
       )
@@ -186,17 +195,17 @@ const ShowImages = ({ actualData }) => {
                     //     ? goodByeWorld(index)
                     //     : helloWorld(index)
                     // }
-                    onClick={() =>
-                      filled && index == editedIndex
-                        ? goodByeWorld(index)
-                        : favouriteHeart(index)
-                    }
-
                     // onClick={() =>
                     //   filled && index == editedIndex
-                    //     ? deleteHeart(index)
+                    //     ? goodByeWorld(index)
                     //     : favouriteHeart(index)
                     // }
+
+                    onClick={() =>
+                      filled && index == editedIndex
+                        ? deleteHeart(index)
+                        : favouriteHeart(index)
+                    }
                   >
                     <AiFillHeart
                       size="20px"
