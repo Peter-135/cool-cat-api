@@ -20,6 +20,25 @@ const ShowImages = ({ actualData, myFavouriteData, actualVotes }) => {
   console.log(actualData, "MY DISPLAYED DATA!");
   console.log(myFavouriteData, "MY FAVOURITES ARRAY!");
 
+  useEffect(() => {
+    const temp = localStorage.getItem("favourites");
+    const realLoadedFavourites = JSON.parse(temp); //converts JSON back to Javascript
+
+    if (realLoadedFavourites) {
+      setFavourites(realLoadedFavourites);
+    }
+    // so only grab data from local storage if it exists
+  }, []);
+  // runs once when the component is loaded if empty array []
+  //localStorage.getItem retrieves items from localStorage
+
+  useEffect(() => {
+    const temp = JSON.stringify(favourites); // turns data into strings
+    localStorage.setItem("favourites", temp); // saves data into localStorage
+  }, [favourites]);
+
+  //  if pass state or props variable in the array, it will run every time state or props is updated
+
   // console.log(favouritedData, "MY FAVS!!!!! AREN'T YOU??");
 
   // console.log(dataIWant, "LET'S A GO");
