@@ -3,10 +3,10 @@ import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { FaCity, FaThumbsUp } from "react-icons/fa";
 
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom/cjs/react-dom.development";
+
 import axios from "axios";
 
-const ShowImages = ({ actualData, myFavouriteData }) => {
+const ShowImages = ({ actualData, myFavouriteData, actualVotes }) => {
   const [filled, setFilled] = useState(false); // state to see if I can change the color from black to red and vice-versa
   const [editedIndex, setEditedIndex] = useState(null);
   // The actual index to be true or null, so it makes only that row editable, not whole object
@@ -15,9 +15,11 @@ const ShowImages = ({ actualData, myFavouriteData }) => {
   const heightOfCat = dataIWant.height;
   const ogFileName = dataIWant.original_filename;
   const imageURLIWant = dataIWant.url;
+  const [favourites, setFavourites] = useState([]);
   // console.log(favouritedId, "I AM FAVOURITED ID!");
   console.log(actualData, "MY DISPLAYED DATA!");
   console.log(myFavouriteData, "MY FAVOURITES ARRAY!");
+
   // console.log(favouritedData, "MY FAVS!!!!! AREN'T YOU??");
 
   // console.log(dataIWant, "LET'S A GO");
@@ -42,13 +44,13 @@ const ShowImages = ({ actualData, myFavouriteData }) => {
 
   //  if pass state or props variable in the array, it will run every time state or props is updated
 
-  const favouriteHeart = (index) => {
+  const favouriteHeart = (element) => {
     axios
       .post(
         "https://api.thecatapi.com/v1/favourites",
         {
           // image_id: "Bh7ZzShGR",
-          image_id: `${actualData.data[index].id}`,
+          image_id: `${element.id}`,
           // image_id: `${actualData.data.id}`,
         },
         {
@@ -67,8 +69,8 @@ const ShowImages = ({ actualData, myFavouriteData }) => {
         //   return;
         // } else {
         console.log(response, "I AM FAVOURITED");
-        setFilled(true); // from false to true, so terniary operator turns it from black to red
-        setEditedIndex(index); // from null to index, so terniary operator turns it from black to red only for that specific object
+        setFavourites([...favourites, element.id]);
+        setFilled(true); // from false to true, so terniary operator turns it from black to red // from null to index, so terniary operator turns it from black to red only for that specific object
         // setFavouritedData(response);
         // putting favourited info into state, so I can do the delete part
         // }
@@ -96,7 +98,7 @@ const ShowImages = ({ actualData, myFavouriteData }) => {
     setEditedIndex(null); // not longer true, so terniary operator below changes it back from red to black for only that index
   };
 
-  const deleteHeart = (index) => {
+  const deleteHeart = (element, index) => {
     axios
       .delete(
         `https://api.thecatapi.com/v1/favourites/${myFavouriteData.data[index].id}`, // passing id of favourited data to delete
@@ -111,7 +113,10 @@ const ShowImages = ({ actualData, myFavouriteData }) => {
       .then(function (response) {
         console.log(response, "I AM DELETE RESPONSE");
         setFilled(false); // not longer true, so terniary operator below changes it back from red to black
-
+        var favState = [...favourites];
+        var i = favState.indexOf(element.id);
+        favState.splice(i, 1);
+        setFavourites(favState); // save favourites array in local storage???
         setEditedIndex(null); // not longer true, so terniary operator below changes it back from red to black for only that index
       })
       .catch(function (error) {
@@ -202,14 +207,14 @@ const ShowImages = ({ actualData, myFavouriteData }) => {
                     // }
 
                     onClick={() =>
-                      filled && index == editedIndex
-                        ? deleteHeart(index)
-                        : favouriteHeart(index)
+                      favourites.includes(element.id)
+                        ? deleteHeart(element, index)
+                        : favouriteHeart(element)
                     }
                   >
                     <AiFillHeart
                       size="20px"
-                      color={filled && index == editedIndex ? "red" : ""}
+                      color={favourites.includes(element.id) ? "red" : ""}
                     />
                   </label>
                 </div>

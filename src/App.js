@@ -19,7 +19,30 @@ function App() {
   // When app loads, will show "Loading" because of this and terniary operator at the bottom
 
   const [favouritedData, setFavouritedData] = useState([]);
+
+  const [votes, setVotes] = useState([]);
+
+  const [votesLoading, setVotesLoading] = useState(false);
   //the favourite data to be put into state
+  // const [newFavouriteData, setNewFavouriteData] = use([])
+
+  // useEffect(() => {
+  //   const temp = localStorage.getItem("favouriteLoading");
+  //   const loadedFavourites = JSON.parse(temp); //converts JSON back to Javascript
+
+  //   if (loadedFavourites) {
+  //     setFavouritedData(favouritedData);
+  //     console.log(favouritedData, "MR FAVOURITE");
+  //   }
+  //   // so only grab data from local storage if it exists
+  // }, []);
+  // // runs once when the component is loaded if empty array []
+  // //localStorage.getItem retrieves items from localStorage
+
+  // useEffect(() => {
+  //   const temp = JSON.stringify(favouritedData); // turns data into strings
+  //   localStorage.setItem("favouritedData", temp); // saves data into localStorage
+  // }, [favouritedData]);
 
   useEffect(() => {
     // use in axios call with parameters,  https://api.thecatapi.com/v1/images/
@@ -28,7 +51,8 @@ function App() {
 
     // "https://api.thecatapi.com/v1/images/?limit=10";
     axios
-      .get("https://api.thecatapi.com/v1/images/?limit=12", {
+      .get("https://api.thecatapi.com/v1/votes?limit=100", {
+        //gets images objects in array, for display later
         headers: {
           "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
           // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
@@ -36,10 +60,10 @@ function App() {
       }) //used to get info from API endpoint, in our case get cat info from endpoint
       .then((response) => {
         //info in response object
-        setData(response); // puts our response in state data
-        setLoading(true); // sets loading to false, due to terniary operator in return, displays everything else
+        setVotes(response); // puts our response in state data
+        setVotesLoading(true); // sets loading to false, due to terniary operator in return, displays everything else
         // console.log(response);
-        console.log(response);
+        console.log(response, "I AM VOTES ARRAY");
       })
       .catch((error) => {
         console.log(error);
@@ -54,6 +78,7 @@ function App() {
     // "https://api.thecatapi.com/v1/images/?limit=10";
     axios
       .get("https://api.thecatapi.com/v1/favourites?limit=100", {
+        //get all favourited images in array
         headers: {
           "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
           // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
@@ -66,7 +91,33 @@ function App() {
         // setLoading(false);
         // sets loading to false, due to terniary operator in return, displays everything else
         // console.log(response);
-        console.log(response, "MY FAVOURITE DATA");
+        console.log(response, "I AM FAVOURITES ARRAY");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // use in axios call with parameters,  https://api.thecatapi.com/v1/images/
+
+    // Newest API key: 28d6171b-d8fc-424d-9962-2fe3ab6de934
+
+    // "https://api.thecatapi.com/v1/images/?limit=10";
+    axios
+      .get("https://api.thecatapi.com/v1/images/?limit=12", {
+        //gets images objects in array, for display later
+        headers: {
+          "x-api-key": "28d6171b-d8fc-424d-9962-2fe3ab6de934", //NEWEST API KEY
+          // "x-api-key": "17d94b92-754f-46eb-99a0-65be65b5d18f",
+        },
+      }) //used to get info from API endpoint, in our case get cat info from endpoint
+      .then((response) => {
+        //info in response object
+        setData(response); // puts our response in state data
+        setLoading(true); // sets loading to false, due to terniary operator in return, displays everything else
+        // console.log(response);
+        console.log(response, "I AM DATA");
       })
       .catch((error) => {
         console.log(error);
@@ -74,7 +125,7 @@ function App() {
   }, []);
 
   // console.log(data, "MY SUPER FAVORS");
-  console.log(favouritedData, "MY SUPER FAVORS YO!");
+  // console.log(favouritedData, "MY SUPER FAVORS YO!");
   //  if pass state or props variable in the array, it will run every time state or props is updated
 
   const { Dragger } = Upload; // this component and const props below is used to upload file
@@ -124,7 +175,7 @@ function App() {
 
   return (
     <div className="App">
-      {loading && favouriteLoading ? (
+      {loading && favouriteLoading && votesLoading ? (
         <div>
           <div className="button-movement">
             <Button
@@ -137,7 +188,11 @@ function App() {
               Add New
             </Button>
           </div>
-          <ShowImages actualData={data} myFavouriteData={favouritedData} />
+          <ShowImages
+            actualData={data}
+            myFavouriteData={favouritedData}
+            actualVotes={votes}
+          />
           <Modal
             visible={isModalVisible} //state to see if modal is visible or not
             title="Upload File" //title at top of modal
@@ -188,7 +243,7 @@ function App() {
           </Modal>
         </div>
       ) : (
-        // shows Loading when true, shows everything else when false. Allows data to load effectively and "Loading" shows user app is working.
+        // shows Loading when false, shows everything else when true (both loading and favouriteLoading). Allows data to load effectively and "Loading" shows user app is working.
         <h1>Loading...</h1>
       )}
     </div>
